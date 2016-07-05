@@ -152,7 +152,7 @@ public class Deck : MonoBehaviour {
 		// temp variables
 		Sprite tS = null;
 		GameObject tGO = null;
-		SpriteRenderer tSR = null;  // so tempted to make a D&D ref here...
+		SpriteRenderer tSR = null; 
 		
 		for (int i=0; i<cardNames.Count; i++) {
 			GameObject cgo = Instantiate(prefabCard) as GameObject;
@@ -279,9 +279,7 @@ public class Deck : MonoBehaviour {
 			//And remove that card from the original List
 			oCards.RemoveAt (ndx);
 		}
-		//Replace the original List with the temporary List
 		oCards = tCards;
-		//Because oCards is a reference variable, the original that was
-		//passed in is changed as well.
+
 	}
-} // Deck class
+}
