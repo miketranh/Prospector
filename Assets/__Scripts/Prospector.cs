@@ -2,13 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 
-
 public class Prospector : MonoBehaviour {
 
 	static public Prospector 	S;
 	public Deck					deck;
 	public TextAsset			deckXML;
-
 	public Layout layout;
 	public TextAsset layoutXML;
 
@@ -20,7 +18,7 @@ public class Prospector : MonoBehaviour {
 		deck = GetComponent<Deck> ();
 		deck.InitDeck (deckXML.text);
 		Deck.Shuffle (ref deck.cards);
-		layout = GetComponent<GUILayout> ();
+		layout = GetComponent<Layout> ();
 		layout.ReadLayout(layoutXML.text);
 	}
 
