@@ -21,9 +21,9 @@ public class Deck : MonoBehaviour {
 	// Prefabs
 	public GameObject prefabSprite;
 	public GameObject prefabCard;
-
+	
 	public bool _____________________;
-
+	
 	public PT_XMLReader					xmlr;
 	// add from p 569
 	public List<string>					cardNames;
@@ -32,8 +32,8 @@ public class Deck : MonoBehaviour {
 	public List<CardDefinition>			cardDefs;
 	public Transform					deckAnchor;
 	public Dictionary<string, Sprite>	dictSuits;
-
-
+	
+	
 	// called by Prospector when it is ready
 	public void InitDeck(string deckXMLText) {
 		// from page 576
@@ -56,14 +56,14 @@ public class Deck : MonoBehaviour {
 		ReadDeck (deckXMLText);
 		MakeCards();
 	}
-
-
+	
+	
 	// ReadDeck parses the XML file passed to it into Card Definitions
 	public void ReadDeck(string deckXMLText)
 	{
 		xmlr = new PT_XMLReader ();
 		xmlr.Parse (deckXMLText);
-
+		
 		// print a test line
 		string s = "xml[0] decorator [0] ";
 		s += "type=" + xmlr.xml ["xml"] [0] ["decorator"] [0].att ("type");
@@ -129,7 +129,7 @@ public class Deck : MonoBehaviour {
 	public CardDefinition GetCardDefinitionByRank(int rnk) {
 		foreach(CardDefinition cd in cardDefs) {
 			if (cd.rank == rnk) {
-					return(cd);
+				return(cd);
 			}
 		} // foreach
 		return (null);
@@ -235,7 +235,20 @@ public class Deck : MonoBehaviour {
 				tGO.transform.localPosition = Vector3.zero;  // slap it smack dab in the middle
 				tGO.name = "face";
 			}
+			//Add Card Back
+			//The Card_Back will be able to cover everything else on the Card
+			tGO = Instantiate(prefabSprite) as GameObject;
+			tSR = tGO.GetComponent<SpriteRenderer>();
+			tSR.sprite = cardBack;
+			tGO.transform.parent = card.transform;
+			tGO.transform.localPosition = Vector3.zero;
+			//This is a higher sortingOrder than anything else
+			tSR.sortingOrder = 2;
+			tGO.name = "back";
+			card.back = tGO;
 			
+			//Default to face-up
+			card.faceUp = false; //Use the property faceUp of Card
 			cards.Add (card);
 		} // for all the Cardnames	
 	} // makeCards
@@ -248,6 +261,27 @@ public class Deck : MonoBehaviour {
 			}
 		}//foreach	
 		return (null);  // couldn't find the sprite (should never reach this line)
-	 }// getFace 
+	}// getFace 
 	
+	//Shuffle the Cards in Deck.cards
+	static public void Shuffle(ref List<Card> oCards){
+		//Create a temporary List to hold the new shuffle order
+		List<Card> tCards = new List<Card> ();
+		
+		int ndx; //This will hold the index of the card to be moved
+		tCards = new List<Card> (); //Initialize the temporary List
+		//Repeat as long as there are cards in the original List
+		while(oCards.Count > 0){
+			//Pick the index of a random card
+			ndx = Random.Range(0, oCards.Count);
+			//Add that card to the temporary List
+			tCards.Add (oCards[ndx]);
+			//And remove that card from the original List
+			oCards.RemoveAt (ndx);
+		}
+		//Replace the original List with the temporary List
+		oCards = tCards;
+		//Because oCards is a reference variable, the original that was
+		//passed in is changed as well.
+	}
 } // Deck class
