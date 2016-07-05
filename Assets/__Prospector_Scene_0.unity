@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b1479869ea6b6245bdd476152547df7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabFloatingScore: {fileID: 0}
+  prefabFloatingScore: {fileID: 157202, guid: 5c510aa3479240a44b67a0519f78154c, type: 2}
   ________: 0
   _score: 0
   _scoreString: 
@@ -376,8 +376,8 @@ Camera:
   near clip plane: .300000012
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
-  orthographic size: 5
+  orthographic: 1
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -396,7 +396,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 827460508}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 1, z: -40}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -492,8 +492,8 @@ MonoBehaviour:
   scoreRun: 0
   score: 0
   fsRun: {fileID: 0}
-  GTGameOver: {fileID: 0}
-  GTRoundResult: {fileID: 0}
+  GTGameOver: {fileID: 97083457}
+  GTRoundResult: {fileID: 1618517995}
 --- !u!114 &827460516
 MonoBehaviour:
   m_ObjectHideFlags: 0
