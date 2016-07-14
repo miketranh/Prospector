@@ -375,6 +375,8 @@ MonoBehaviour:
   layout: {fileID: 0}
   layoutAnchor: {fileID: 0}
   handFanDegrees: 10
+  numStartingCards: 7
+  drawTimeStagger: .100000001
   players: []
   targetCard: {fileID: 0}
 --- !u!114 &827460516

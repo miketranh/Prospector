@@ -25,6 +25,11 @@ public class CardBartok : Card {
 	public int eventualSortOrder;
 	public string eventualSortLayer;
 	public GameObject reportFinishTo = null;
+	public Player callbackPlayer= null;
+
+	void Awake(){
+		callbackPlayer = null;
+	}
 
 	public void MoveTo(Vector3 ePos, Quaternion eRot){
 		bezierPts = new List<Vector3>();
@@ -47,7 +52,7 @@ public class CardBartok : Card {
 		case CBState.toHand:
 		case CBState.toTarget:
 		case CBState.to:
-			float u = (Time.time - timeStart)/timeDuration;
+			float u = (Time.time - timeStart) / timeDuration;
 			float uC = Easing.Ease (u, MOVE_EASING);
 
 			if (u < 0) {
@@ -56,30 +61,42 @@ public class CardBartok : Card {
 				return;
 			} else if (u >= 1) {
 				uC = 1;
-				if (state == CBState.toHand) state = CBState.hand;
-				if (state == CBState.toTarget) state = CBState.toTarget;
-				if (state == CBState.to) state = CBState.idle;
+				if (state == CBState.toHand)
+					state = CBState.hand;
+				if (state == CBState.toTarget)
+					state = CBState.toTarget;
+				if (state == CBState.to)
+					state = CBState.idle;
 
 		
 				transform.localPosition = bezierPts [bezierPts.Count - 1];
 				transform.rotation = bezierRots [bezierPts.Count - 1];
 				timeStart = 0;
 				if (reportFinishTo != null) {
-					reportFinishTo.SendMessage("CBCallback", this);
+					reportFinishTo.SendMessage ("CBCallback", this);
 					reportFinishTo = null;
-				} else {
-					//DO nothing
+				} else if (callbackPlayer != null) {
+					callbackPlayer.CBCallback (this);
+					callbackPlayer = null;
 				}
 			} else {
-				Vector3 pos = Utils.Bezier(uC, bezierPts);
+				Vector3 pos = Utils.Bezier (uC, bezierPts);
 				transform.localPosition = pos;
-				Quaternion rotQ = Utils.Bezier(uC, bezierRots);
+				Quaternion rotQ = Utils.Bezier (uC, bezierRots);
 				transform.rotation = rotQ;
-					SetSortingLayerName(eventualSortLayer);
+				if (u > .5f && spriteRenderers [0].sortingOrder != eventualSortOrder) {
+					SetSortOrder (eventualSortOrder);
+				}
+				if (u > .75f && spriteRenderers [0].sortingLayerName != eventualSortLayer) {
+					SetSortingLayerName (eventualSortLayer);
 				}
 
 			}
 			break;
 		}
+	}
+	override public void OnMouseUpAsButton(){
+		Bartok.S.CardClicked (this);
+		base.OnMouseUpAsButton ();
 	}
 }
