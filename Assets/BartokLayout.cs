@@ -24,8 +24,7 @@ public class BartokLayout : MonoBehaviour {
 	public PT_XMLReader xmlr;
 	public PT_XMLHashtable xml;
 	public Vector2 multiplier;
-	tableau
-		public List<SlotDef> slotDefs;
+	public List<SlotDef> slotDefs;
 	public SlotDef drawPile;
 	public SlotDef discardPile;
 	public SlotDef target;
@@ -33,7 +32,7 @@ public class BartokLayout : MonoBehaviour {
 		xmlr = new PT_XMLReader ();
 		xmlr.Parse (xmlText);
 		xml = xmlr.xml ["xml"] [0];
-		multiplier.x= float.Parse(xml["multiplier"][0].att("x"))
+		multiplier.x = float.Parse (xml ["multiplier"] [0].att ("x"));
 		multiplier.y = float.Parse (xml ["multiplier"] [0].att ("y"));
 		
 		SlotDef tSD;
@@ -48,26 +47,31 @@ public class BartokLayout : MonoBehaviour {
 			}
 			tSD.x = float.Parse (slotsX[i].att("x"));
 			tSD.y = float.Parse (slotsX[i].att("y"));
-			tSD.pos = new Vector3(tSD.x*multiplier.x,tSD.y*multiplier.y,0)
-				//sorting Layers
+			tSD.pos = new Vector3(tSD.x*multiplier.x,tSD.y*multiplier.y,0);
+			//sorting Layers
 			tSD.layerID = int.Parse (slotsX[i].att("layer"));
 			
 			tSD.layerName = tSD.layerID.ToString();
 			
-			switch (tSD.type){
+			switch(tSD.type){
 			case "slot":
 				break;
 			case "drawpile":
-				s
+				tSD.stagger.x = float.Parse(slotsX[i].att ("xstagger"));
+				drawPile = tSD;
 				break;
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+			case "discardpile":
+				discardPile = tSD;
+				break;
+			case "target":
+				target = tSD;
+				break;
+			case "hand":
+				tSD.player = int.Parse (slotsX[i].att ("player"));
+				tSD.rot = float.Parse(slotsX[i].att ("rot"));
+				slotDefs.Add (tSD);
+				break;
+			}
+		}
 	}
 }
