@@ -29,11 +29,17 @@ public class Bartok : MonoBehaviour {
 	public CardBartok targetCard;
 	public TurnPhase phase=TurnPhase.idle;
 	public GameObject turnLight;
+	public GameObject GTGameOver;
+	public GameObject GTRoundResult;
 
 	void Awake(){
 		S = this;
 
 		turnLight = GameObject.Find ("TurnLight");
+		GTGameOver = GameObject.Find ("GTGameOver");
+		GTRoundResult = GameObject.Find ("GTRoundResult");
+		GTGameOver.SetActive (false);
+		GTRoundResult.SetActive (false);
 	}
 
 
@@ -114,18 +120,22 @@ public class Bartok : MonoBehaviour {
 	}
 	
 	public void PassTurn(int num = -1){
-		if(num == -1){
-			int ndx = players.IndexOf(CURRENT_PLAYER);
-			num = (ndx + 1)%4;
+		if (num == -1) {
+			int ndx = players.IndexOf (CURRENT_PLAYER);
+			num = (ndx + 1) % 4;
 		}
 		int lastPlayerNum = -1;
 		
-		if(CURRENT_PLAYER != null){
+		if (CURRENT_PLAYER != null) {
 			lastPlayerNum = CURRENT_PLAYER.playerNum;
+			if (CheckGameOver ()) {
+				return;
+			}
 		}
+	
 		CURRENT_PLAYER = players [num];
 		phase = TurnPhase.pre;
-		CURRENT_PLAYER.TakeTurn();
+		CURRENT_PLAYER.TakeTurn ();
 		
 		Vector3 lPos = CURRENT_PLAYER.handSlotDef.pos + Vector3.back * 5;
 		turnLight.transform.position = lPos;
@@ -207,5 +217,39 @@ public class Bartok : MonoBehaviour {
 			break;
 		}
 }
+	public bool CheckGameOver(){
+		if(drawPile.Count == 0){
+			List<Card> cards = new List<Card>();
+			foreach(CardBartok cb in discardPile){
+				cards.Add(cb);
+			}
+			discardPile.Clear();
+			Deck.Shuffle(ref cards);
+			drawPile = UpgradeCardsList(cards);
+			ArrangeDrawPile();
+		}
+		
+		if(CURRENT_PLAYER.hand.Count == 0){
+			if(CURRENT_PLAYER.type == PlayerType.human){
+				GTGameOver.guiText.text = "You Won!";
+				GTRoundResult.guiText.text = "";
+			}else{
+				GTGameOver.guiText.text = "Game Over";
+				GTRoundResult.guiText.text = "Player" + CURRENT_PLAYER.playerNum + "won";
+			}
+			GTGameOver.SetActive(true);
+			GTRoundResult.SetActive(true);
+			phase = TurnPhase.gameOver;
+			Invoke("RestartGame", 1);
+			return(true);
+		}
+		return (false);
+	}
+	
+	public void RestartGame(){
+		CURRENT_PLAYER = null;
+		Application.LoadLevel ("__Bartok_Scene_0");
+	}
+
 
 }
