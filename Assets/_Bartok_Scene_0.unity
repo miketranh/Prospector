@@ -372,6 +372,11 @@ MonoBehaviour:
   deck: {fileID: 0}
   drawPile: []
   discardPile: []
+  layout: {fileID: 0}
+  layoutAnchor: {fileID: 0}
+  handFanDegrees: 10
+  players: []
+  targetCard: {fileID: 0}
 --- !u!114 &827460516
 MonoBehaviour:
   m_ObjectHideFlags: 0

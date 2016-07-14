@@ -22,6 +22,8 @@ public class CardBartok : Card {
 	public List<Vector3> bezierPts;
 	public List<Quaternion> bezierRots;
 	public float timeStart, timeDuration;
+	public int eventualSortOrder;
+	public string eventualSortLayer;
 	public GameObject reportFinishTo = null;
 
 	public void MoveTo(Vector3 ePos, Quaternion eRot){
@@ -73,6 +75,9 @@ public class CardBartok : Card {
 				transform.localPosition = pos;
 				Quaternion rotQ = Utils.Bezier(uC, bezierRots);
 				transform.rotation = rotQ;
+					SetSortingLayerName(eventualSortLayer);
+				}
+
 			}
 			break;
 		}
